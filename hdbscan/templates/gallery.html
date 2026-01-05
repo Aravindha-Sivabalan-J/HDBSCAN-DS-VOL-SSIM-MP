@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header" style="margin-bottom: 2rem;">
+    <h1>Media <span class="highlight">Library</span></h1>
+    <p style="color: var(--text-secondary);">Browse processed videos with identity annotations.</p>
+</div>
+
+{% if videos %}
+<div class="gallery-grid">
+    {% for video in videos %}
+    <div class="video-card" id="video-card-{{ video.id }}" data-processed="{{ video.is_processed|yesno:'true,false' }}">
+        <div class="video-container">
+            {% if video.is_processed and video.processed_file %}
+            <video controls>
+                <source src="{{ video.processed_file.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            {% elif video.video_file %}
+            <div style="position: relative; width: 100%; height: 100%;">
+                <video style="opacity: 0.3; width: 100%; height: 100%; object-fit: cover;">
+                    <source src="{{ video.video_file.url }}" type="video/mp4">
+                </video>
+                <div class="loader-overlay"
+                    style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <!-- Spinner or just text handled below -->
+                </div>
+            </div>
+            {% else %}
+            <div
+                style="height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
+                No Media
+            </div>
+            {% endif %}
+        </div>
+        <div class="video-info">
+            <h3>{{ video.title|default:"Untitled Video" }}</h3>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Uploaded: {{
+                video.uploaded_at|date:"M d, Y H:i" }}</p>
+
+            <div class="status-area">
+                {% if video.is_processed %}
+                <span class="status-badge status-processed">Completed</span>
+                {% else %}
+                <span class="status-badge status-pending">Processing...</span>
+                {% endif %}
+
+                <p class="status-text" style="font-size: 0.8rem; color: #888; margin-top: 0.5rem; min-height: 1.2em;">
+                    {{ video.status_message }}
+                </p>
+
+                {% if not video.is_processed %}
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: {{ video.progress }}%;"></div>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if video.is_processed %}
+            <div class="actions" style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                {% if video.processed_file %}
+                <a href="{{ video.processed_file.url }}" download class="btn"
+                    style="padding: 0.5rem 1rem; font-size: 0.8rem;">Download Video</a>
+                {% endif %}
+
+                {% if video.cluster_plot %}
+                <a href="{{ video.cluster_plot.url }}" target="_blank" class="btn"
+                    style="padding: 0.5rem 1rem; font-size: 0.8rem; background: linear-gradient(135deg, #4b5563, #374151);">View
+                    Clusters</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div style="text-align: center; padding: 4rem;">
+    <p style="color: var(--text-secondary); font-size: 1.2rem;">No videos found.</p>
+    <a href="{% url 'upload_video' %}" class="btn" style="margin-top: 1rem;">Upload First Video</a>
+</div>
+{% endif %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cards = document.querySelectorAll('.video-card[data-processed="false"]');
+
+        cards.forEach(card => {
+            const videoId = card.id.replace('video-card-', '');
+            const progressBar = card.querySelector('.progress-bar');
+            const statusText = card.querySelector('.status-text');
+
+            const poll = setInterval(() => {
+                fetch(`/status/${videoId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (progressBar) {
+                            progressBar.style.width = `${data.progress}%`;
+                        }
+                        if (statusText) {
+                            statusText.textContent = data.status_message;
+                        }
+
+                        if (data.is_processed) {
+                            clearInterval(poll);
+                            // Reload to show video player and plot button
+                            // Optional: Could swap DOM elements dynamically for smoother exp
+                            window.location.reload();
+                        }
+                    })
+                    .catch(e => console.error(e));
+            }, 2000); // Poll every 2 seconds
+        });
+    });
+</script>
+{% endblock %}

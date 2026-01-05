@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaceTrace AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="app-container">
+        <nav class="navbar">
+            <div class="logo">FaceTrace <span class="highlight">AI</span></div>
+            <ul class="nav-links">
+                <li><a href="{% url 'index' %}" class="nav-item">Home</a></li>
+                <li><a href="{% url 'enroll' %}" class="nav-item">Enrollment</a></li>
+                <li><a href="{% url 'upload_video' %}" class="nav-item">Analyze Video</a></li>
+                <li><a href="{% url 'gallery' %}" class="nav-item">Gallery</a></li>
+            </ul>
+        </nav>
+        
+        <main class="content">
+            {% block content %}{% endblock %}
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 FaceTrace AI. Advanced Facial Analytics.</p>
+        </footer>
+    </div>
+</body>
+</html>

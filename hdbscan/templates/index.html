@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero">
+    <h1>Advanced <span class="highlight">Face Recognition</span> & Video Analytics</h1>
+    <p style="margin-top: 1rem; color: var(--text-secondary); max-width: 600px;">
+        Deploy state-of-the-art AI to identify individuals in video streams with high accuracy using YOLOv8, ArcFace,
+        and HDBSCAN clustering.
+    </p>
+</div>
+
+<div class="dashboard-grid">
+    <a href="{% url 'enroll' %}" class="card">
+        <h2>1. Enrollment</h2>
+        <p>Register new individuals by uploading a secure reference image. The system generates unique embeddings for
+            identification.</p>
+        <div class="btn">Enroll New Person &rarr;</div>
+    </a>
+
+    <a href="{% url 'upload_video' %}" class="card">
+        <h2>2. Analyze Video</h2>
+        <p>Upload raw video footage. Our pipeline detects faces, clusters identities, and annotates recognized
+            individuals automatically.</p>
+        <div class="btn">Start Analysis &rarr;</div>
+    </a>
+
+    <a href="{% url 'gallery' %}" class="card">
+        <h2>3. Media Library</h2>
+        <p>Access your processed videos. View framed detections and identified subjects in the secure playback gallery.
+        </p>
+        <div class="btn">View Gallery &rarr;</div>
+    </a>
+</div>
+{% endblock %}

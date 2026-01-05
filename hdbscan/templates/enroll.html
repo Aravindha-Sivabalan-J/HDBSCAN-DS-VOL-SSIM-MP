@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-container">
+    <h1><span class="highlight">Enroll</span> Person</h1>
+    <p style="margin-bottom: 2rem; color: var(--text-secondary);">Upload 1-5 clear facial images to register an identity for robust recognition.
+    </p>
+
+    {% if success %}
+    <div
+        style="background: rgba(16, 185, 129, 0.2); color: var(--success); padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+        {{ success }}
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div
+        style="background: rgba(239, 68, 68, 0.2); color: var(--error); padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.person_id.id_for_label }}">Person Name / ID</label>
+            {{ form.person_id }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.image1.id_for_label }}">Image 1 (Required)</label>
+            {{ form.image1 }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.image2.id_for_label }}">Image 2 (Optional)</label>
+            {{ form.image2 }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.image3.id_for_label }}">Image 3 (Optional)</label>
+            {{ form.image3 }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.image4.id_for_label }}">Image 4 (Optional)</label>
+            {{ form.image4 }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.image5.id_for_label }}">Image 5 (Optional)</label>
+            {{ form.image5 }}
+        </div>
+
+        <button type="submit" class="btn">Enroll Identity</button>
+    </form>
+</div>
+{% endblock %}

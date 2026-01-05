@@ -1,0 +1,40 @@
+# --- Python & Django Core ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+*.pyc
+
+# --- Virtual Environment ---
+venv/
+env/
+.venv/
+
+# --- Environment Variables (Secrets) ---
+.env
+.env.local
+
+# --- Databases ---
+# SQLite3 (Standard Django DB)
+db.sqlite3
+db.sqlite3-journal
+
+# --- ChromaDB (Vector DB Persistence) ---
+chroma_db_store/
+chroma_db/
+chroma_data/
+
+# --- Project Specific Large Files ---
+# ML Models - too large for GitHub
+analysis_pipeline/models/*
+
+# --- Media Files ---
+# Don't track uploaded videos, processed outputs, or images
+media/
+static_root/
+
+# --- OS & IDE Junk ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
